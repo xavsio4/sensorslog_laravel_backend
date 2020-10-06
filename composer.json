@@ -1,5 +1,5 @@
 {
-    "name": "sensorlog",
+    "name": "fifteenpeas/sensorslog",
     "type": "project",
     "description": "Backend Api for sensorslog",
     "keywords": [
