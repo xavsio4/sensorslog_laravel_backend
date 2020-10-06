@@ -1,7 +1,7 @@
 {
-    "name": "laravel/laravel",
+    "name": "sensorlog",
     "type": "project",
-    "description": "The Laravel Framework.",
+    "description": "Backend Api for sensorslog",
     "keywords": [
         "framework",
         "laravel"
