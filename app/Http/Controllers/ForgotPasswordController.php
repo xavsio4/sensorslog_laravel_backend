@@ -16,7 +16,8 @@ class ForgotPasswordController extends Controller
     {
         $this->middleware('guest');
     }
-    public function __invoke(Request $request)
+    
+    public function sendReset(Request $request)
     {
         $this->validateEmail($request);
         // We will send the password reset link to this user. Once we have attempted
