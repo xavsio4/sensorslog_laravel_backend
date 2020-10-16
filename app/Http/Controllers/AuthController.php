@@ -8,6 +8,8 @@ use App\Models\Measure;
 use App\Models\Apikey;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 use Keygen;
 
 class AuthController extends Controller
@@ -19,7 +21,7 @@ class AuthController extends Controller
     */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login', 'register']]);
+        $this->middleware('auth:api', ['except' => ['login', 'register','passwordForgot']]);
     }
     
     /**
@@ -148,7 +150,8 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return response()->json([
             'status_code' => 401,
-            'message' => 'Bad request.'
+            // 'message' => 'Bad request.'
+            'message' => $validator->failed()
             ]
             , 401);
         }
@@ -208,6 +211,36 @@ class AuthController extends Controller
         return response()->json([
         'status_code' => 401,
         'message' => 'Login Failed'
+        ]);
+    }
+    
+    /**
+    * passworg forgot
+    *
+    */
+    public function passwordForgot(request $request)
+    {
+        $validator = Validator::make($request->all(), [
+        'email' => 'required|email',
+        ]);
+        
+        if ($validator->fails()) {
+            return response()->json($validator->errors());
+        }
+        
+        $status = Password::sendResetLink(
+        $request->only('email')
+        );
+        
+        if ($status === Password::RESET_LINK_SENT)
+            return response()->json([
+        'status_code' => 200,
+        'message' => 'Password reset link sent !'
+        ]);
+        else
+            return response()->json([
+        'status_code' => 401,
+        'message' => 'Somrthing is wrong ! Are you registered here ?'
         ]);
     }
     
