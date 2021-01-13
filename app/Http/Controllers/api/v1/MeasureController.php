@@ -24,8 +24,31 @@ class MeasureController extends Controller
         //$this->user = JWTAuth::parseToken()->authenticate();
     }
     
+    
     /**
-    * List the measures for the frontend
+    * @OA\Get(
+    *      path="api/v1/measures",
+    *      operationId="index",
+    *      tags={"Measures"},
+    *      summary="Get list of measures from the most recent to the oldest",
+    *      description="Returns list of measures",
+    * @OA\Parameter(
+    *          api_key="api_key",
+    *      ),
+    *      @OA\Response(
+    *          response=200,
+    *          description="Successful operation",
+    *          @OA\JsonContent(ref="#/models/Measure")
+    *       ),
+    *      @OA\Response(
+    *          response=401,
+    *          description="Unauthenticated",
+    *      ),
+    *      @OA\Response(
+    *          response=403,
+    *          description="Forbidden"
+    *      )
+    *     )
     */
     public function index(request $request)
     {
@@ -40,6 +63,31 @@ class MeasureController extends Controller
         
     }
     
+    /**
+    * @OA\Post(
+    *      path="api/v1/measures/create",
+    *      operationId="create",
+    *      tags={"Measures"},
+    *      summary="Create a measure",
+    *      description="Create the measures a return a json with the created measure",
+    * @OA\Parameter(
+    *          api_key="api_key",
+    *      ),
+    *      @OA\Response(
+    *          response=200,
+    *          description="Successful operation",
+    *          @OA\JsonContent(ref="#/models/Measure")
+    *       ),
+    *      @OA\Response(
+    *          response=401,
+    *          description="Unauthenticated",
+    *      ),
+    *      @OA\Response(
+    *          response=403,
+    *          description="Forbidden"
+    *      )
+    *     )
+    */
     public function create(request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -78,6 +126,45 @@ class MeasureController extends Controller
         //just in case
         return response()->json(['status'=> 401,"message"=>"Something went terribly wrong and it looks you'd better not do that anymore."], 401);
         
+    }
+    
+    /**
+    * @OA\Get(
+    *      path="api/v1/measures/latest",
+    *      operationId="create",
+    *      tags={"Measures"},
+    *      summary="Get the latest measure",
+    *      description="Returns the latest measure",
+    * @OA\Parameter(
+    *           api_key="api_key",
+    *           measure_type="measure_type",
+    *           origine="origine"
+    *      ),
+    *      @OA\Response(
+    *          response=200,
+    *          description="Successful operation",
+    *          @OA\JsonContent(ref="#/models/Measure")
+    *       ),
+    *      @OA\Response(
+    *          response=401,
+    *          description="Unauthenticated",
+    *      ),
+    *      @OA\Response(
+    *          response=403,
+    *          description="Forbidden"
+    *      )
+    *     )
+    */
+    public function getLatest(request $request)
+    {
+        $user = $this->guard()->user();
+        
+        $measures = Measure::where('user_id',$user->id)->orderBy('created_at','desc')->first();
+        // $measures = Measure::all();
+        return response()->json([
+        'success' => true,
+        'data' => $measures
+        ]);
     }
     
     /**

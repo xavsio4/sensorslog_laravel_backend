@@ -25,6 +25,7 @@ Route::group(['middleware' => 'auth:api'], function() {
         return auth()->user();
     });
     Route::get('v1/measures','App\Http\Controllers\api\v1\MeasureController@index');
+    Route::get('v1/measure/latest','App\Http\Controllers\api\v1\MeasureController@getLatest');
     Route::get('auth/createapikey', 'App\Http\Controllers\AuthController@createapikey');
     Route::get('auth/renewapikey', 'App\Http\Controllers\AuthController@renewapikey');
     Route::get('auth/listkey', 'App\Http\Controllers\AuthController@apikeyList');
