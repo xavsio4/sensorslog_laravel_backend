@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api\v1;
 use Validator;
 use Illuminate\Http\Request;
 use App\Models\Measure;
+use App\Http\Resources\MeasureResource;
 use App\Models\Apikey;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -20,7 +21,7 @@ class MeasureController extends Controller
     */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['create','counting']]);
+        $this->middleware('auth:api', ['except' => ['create','get','counting']]);
         //$this->user = JWTAuth::parseToken()->authenticate();
     }
     
@@ -92,6 +93,7 @@ class MeasureController extends Controller
     */
     public function create(request $request)
     {
+        
         $validator = Validator::make($request->all(), [
         //'measure_type' => 'required',
         'measure_value' => 'required',
@@ -130,6 +132,10 @@ class MeasureController extends Controller
         
     }
     
+    
+    /**
+    *
+    */
     public function get(request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -143,9 +149,13 @@ class MeasureController extends Controller
         //get the user_id from the key
         $apikey = Apikey::where('key',$request->key)->first();
         
-        $result= Measure::where('user_id',$apikey->user_id)->get();
+        //$input = $request->except(['key','page']);
+        $input = $request->only(['origin','measure_type','measure_unit']);
         
-        return response()->json(['status'=> "success","data"=> $result], 200);
+        $result= MeasureResource::collection(Measure::where('user_id',$apikey->user_id)->where($input)->orderBy('created_at','desc')->paginate());
+        
+        //because we are using collections from resources
+        return $result;
     }
     
     /**
