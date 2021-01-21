@@ -63,6 +63,8 @@ class MeasureController extends Controller
         
     }
     
+    
+    
     /**
     * @OA\Post(
     *      path="api/v1/measures/create",
@@ -107,7 +109,7 @@ class MeasureController extends Controller
         //I leave this one as for information purpose
         //so you see this eloquent command exists too
         //$measure = Measure::create($request->all());
-        //but hey, better do like below in our context
+        //but hey, in this app context it is better do like below
         
         
         if ($apikey) { //did we found someone ?
@@ -126,6 +128,24 @@ class MeasureController extends Controller
         //just in case
         return response()->json(['status'=> 401,"message"=>"Something went terribly wrong and it looks you'd better not do that anymore."], 401);
         
+    }
+    
+    public function get(request $request)
+    {
+        $validator = Validator::make($request->all(), [
+        'key' => 'required'
+        ]);
+        
+        if ($validator->fails()) {
+            return response()->json($validator->errors());
+        }
+        
+        //get the user_id from the key
+        $apikey = Apikey::where('key',$request->key)->first();
+        
+        $result= Measure::where('user_id',$apikey->user_id)->get();
+        
+        return response()->json(['status'=> "success","data"=> $result], 200);
     }
     
     /**

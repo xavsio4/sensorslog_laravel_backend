@@ -33,4 +33,5 @@ Route::group(['middleware' => 'auth:api'], function() {
 });
 
 Route::post('v1/measure/create','App\Http\Controllers\api\v1\MeasureController@create');
+Route::get('v1/measure/get','App\Http\Controllers\api\v1\MeasureController@get');
 Route::get('v1/measure/counting','App\Http\Controllers\api\v1\MeasureController@counting');
