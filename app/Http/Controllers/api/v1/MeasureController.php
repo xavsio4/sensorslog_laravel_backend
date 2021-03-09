@@ -283,28 +283,28 @@ class MeasureController extends Controller
     
     } */
     
-    /*  public function destroy(request $request)
+    public function destroy(request $request)
     {
-    $measure = Measure::find($request->id);
-    
-    if (!$measure) {
-    return response()->json([
-    'success' => false,
-    'message' => 'Post not found'
-    ], 400);
+        $measure = Measure::find($request->id);
+        
+        if (!$measure) {
+            return response()->json([
+            'success' => false,
+            'message' => 'Measure not found'
+            ], 400);
+        }
+        
+        if ($measure->delete()) {
+            return response()->json([
+            'success' => true
+            ]);
+        } else {
+            return response()->json([
+            'success' => false,
+            'message' => 'Measure can not be deleted'
+            ], 500);
+        }
     }
-    
-    if ($measure->delete()) {
-    return response()->json([
-    'success' => true
-    ]);
-    } else {
-    return response()->json([
-    'success' => false,
-    'message' => 'Measure can not be deleted'
-    ], 500);
-    }
-    } */
     
     
     /**
