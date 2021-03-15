@@ -9,6 +9,7 @@ use App\Http\Resources\MeasureResource;
 use App\Models\Apikey;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 
 class MeasureController extends Controller
@@ -189,13 +190,26 @@ class MeasureController extends Controller
     {
         $user = $this->guard()->user();
         
-        $measures = Measure::where('user_id',$user->id)->orderBy('created_at','desc')->first();
+        $measures = DB::select('select measure_type,origin,measure_unit, max(measure_value) ,max(created_at) from measures where user_id = :id group by measure_type,origin,measure_unit', ['id' => $user->id]);
+        return response()->json([
+        'success' => true,
+        'data' => $measures
+        ]);
+    }
+    
+    public function getDynamicTypes(request $request)
+    {
+        $user = $this->guard()->user();
+        
+        $measures = Measure::select('measure_type')->distinct('measure_type')->where('user_id',$user->id)->get();
         // $measures = Measure::all();
         return response()->json([
         'success' => true,
         'data' => $measures
         ]);
     }
+    
+    
     
     /**
     * That would have been the one without the key in the url

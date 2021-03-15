@@ -25,6 +25,7 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::get('v1/measures','App\Http\Controllers\api\v1\MeasureController@index');
     Route::delete('v1/measure/destroy/{id}','App\Http\Controllers\api\v1\MeasureController@destroy');
     Route::get('v1/measure/latest','App\Http\Controllers\api\v1\MeasureController@getLatest');
+    Route::get('v1/measure/types','App\Http\Controllers\api\v1\MeasureController@getDynamicTypes');
     
     //account
     Route::get('auth/user', function(Request $request) {
