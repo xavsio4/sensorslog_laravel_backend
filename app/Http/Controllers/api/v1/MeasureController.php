@@ -341,7 +341,12 @@ class MeasureController extends Controller
         'selection' => 'required'
         ]);
         
-        $filter = $request->filter;
+        if ($validator->fails()) {
+            return response()->json($validator->errors());
+        }
+        
+        $selection = $request->selection;
+        
         
         $result = Measure::whereIn('id',$selection)->delete();
         
