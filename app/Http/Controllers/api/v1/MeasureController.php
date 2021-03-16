@@ -162,7 +162,7 @@ class MeasureController extends Controller
     /**
     * @OA\Get(
     *      path="api/v1/measures/latest",
-    *      operationId="create",
+    *      operationId="latest",
     *      tags={"Measures"},
     *      summary="Get the latest measure",
     *      description="Returns the latest measure",
@@ -359,13 +359,22 @@ class MeasureController extends Controller
         'inverse' => 'required'
         ]);
         
+        if ($validator->fails()) {
+            return response()->json($validator->errors());
+        }
+        
+        
         $inverse = $request->inverse;
         $selection = $request->selection; //should be an array
+        
+        return $selection;
         
         if ($inverse == 0)
             $result = Measure::whereIn('id',$selection)->delete();
         else
             $result = Measure::whereNotIn('id',$selection)->delete();
+        
+        return $result;
         
         return response()->json(['status'=>'success']);
         
