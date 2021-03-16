@@ -367,7 +367,7 @@ class MeasureController extends Controller
         $inverse = $request->inverse;
         $selection = $request->selection; //should be an array
         
-        return $selection;
+        //return $selection;
         
         if ($inverse == 0)
             $result = Measure::whereIn('id',$selection)->delete();
