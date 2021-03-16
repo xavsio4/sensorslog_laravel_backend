@@ -326,9 +326,9 @@ class MeasureController extends Controller
     public function destroyall()
     {
         $user = $this->guard()->user();
-        $measure = Measure::where('user_id',$user->id)->delete();
+        $result = Measure::where('user_id',$user->id)->delete();
         
-        return response()->json(['status'=>'success']);
+        return response()->json(['status'=>'success','data'=>$result]);
         
     }
     
@@ -338,14 +338,14 @@ class MeasureController extends Controller
     public function destroyfiltered(request $request)
     {
         $validator = Validator::make($request->all(), [
-        'filter' => 'required'
+        'selection' => 'required'
         ]);
         
         $filter = $request->filter;
         
-        $result = Measure::find()->delete();
+        $result = Measure::whereIn('id',$selection)->delete();
         
-        return response()->json(['status'=>'success']);
+        return response()->json(['status'=>'success','data'=>$result]);
         
     }
     
