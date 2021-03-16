@@ -320,6 +320,57 @@ class MeasureController extends Controller
         }
     }
     
+    /**
+    * Destroy All
+    */
+    public function destroyall()
+    {
+        $user = $this->guard()->user();
+        $measure = Measure::where('user_id',$user->id)->delete();
+        
+        return response()->json(['status'=>'success']);
+        
+    }
+    
+    /**
+    * Destroy filtered
+    */
+    public function destroyfiltered(request $request)
+    {
+        $validator = Validator::make($request->all(), [
+        'filter' => 'required'
+        ]);
+        
+        $filter = $request->filter;
+        
+        $result = Measure::find()->delete();
+        
+        return response()->json(['status'=>'success']);
+        
+    }
+    
+    /**
+    * Destroy selection
+    */
+    public function destroyselected(request $request)
+    {
+        $validator = Validator::make($request->all(), [
+        'selection' => 'required',
+        'inverse' => 'required'
+        ]);
+        
+        $inverse = $request->inverse;
+        $selection = $request->selection; //should be an array
+        
+        if ($inverse == 0)
+            $result = Measure::whereIn('id',$selection)->delete();
+        else
+            $result = Measure::whereNotIn('id',$selection)->delete();
+        
+        return response()->json(['status'=>'success']);
+        
+    }
+    
     
     /**
     * Yeah I display this in the front of the frontend
