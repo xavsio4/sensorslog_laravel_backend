@@ -193,13 +193,13 @@ class MeasureController extends Controller
         // $measures = DB::select('select max(id),measure_type,origin,measure_unit, max(created_at),measure_value from `measures`
         // where user_id = :id group by measure_type,origin,measure_unit', ['id' => $user->id]);
         
-        $measures = DB::select('select
-        a.measure_type, a.origin, a.created_at, a.measure_value
+        $measures = DB::select("select
+        a.measure_type, a.origin, convert_tz(a.created_at,'+00:00','+01:00') as created_at, a.measure_value
         from measures a where id in (
         select max(id)
         from measures
         where user_id = :id
-        group by measure_type,origin,measure_unit)', ['id' => $user->id]);
+        group by measure_type,origin,measure_unit)", ['id' => $user->id]);
         
         return response()->json([
         'success' => true,
