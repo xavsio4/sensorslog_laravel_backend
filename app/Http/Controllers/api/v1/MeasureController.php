@@ -189,7 +189,7 @@ class MeasureController extends Controller
     public function getLatest(request $request)
     {
         $user = $this->guard()->user();
-        
+        DB::select('SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,\'ONLY_FULL_GROUP_BY\',\'\'))');
         $measures = DB::select('select measure_type,origin,measure_unit, measure_value,max(created_at) as created_at from measures where user_id = :id group by measure_type,origin,measure_unit', ['id' => $user->id]);
         return response()->json([
         'success' => true,
