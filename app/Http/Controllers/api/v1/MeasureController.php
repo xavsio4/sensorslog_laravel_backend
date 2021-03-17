@@ -192,7 +192,7 @@ class MeasureController extends Controller
         //DB::select('SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,\'ONLY_FULL_GROUP_BY\',\'\'))');
         $measures = DB::select('select max(id),measure_type,origin,measure_unit, max(created_at),max(measure_value) from `measures`
         where user_id = :id
-        group by measure_type,origin', ['id' => $user->id]);
+        group by measure_type,origin,measure_unit', ['id' => $user->id]);
         return response()->json([
         'success' => true,
         'data' => $measures
