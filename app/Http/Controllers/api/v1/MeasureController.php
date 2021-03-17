@@ -190,7 +190,7 @@ class MeasureController extends Controller
     {
         $user = $this->guard()->user();
         
-        $measures = DB::select('select measure_type,origin,measure_unit, max(measure_value) as measure_value ,max(created_at) as created_at from measures where user_id = :id group by measure_type,origin,measure_unit', ['id' => $user->id]);
+        $measures = DB::select('select measure_type,origin,measure_unit, measure_value,max(created_at) as created_at from measures where user_id = :id group by measure_type,origin,measure_unit', ['id' => $user->id]);
         return response()->json([
         'success' => true,
         'data' => $measures
